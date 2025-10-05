@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["*"],
+      "@/*": ["./*"]
+    },
+    "target": "esnext",
+    "module": "commonjs",
+    "jsx": "react",
+    "checkJs": false,
+    "moduleResolution": "node"
+  },
+  "exclude": ["node_modules", ".expo", "dist"]
+}
