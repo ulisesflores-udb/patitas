@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavBar from '../components/BottomNavBar';
+import BottomNavBar from './BottomNavBar';
 
 export default function HomeScreen({ navigation }) {
   // Datos de ejemplo para las mascotas
