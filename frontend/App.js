@@ -9,6 +9,10 @@ import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import EditProfileScreen from './src/screens/EditProfileScreen';
+import MyPublicationsScreen from './src/screens/MyPublicationsScreen';
+import ChangePasswordScreen from './src/screens/ChangePasswordScreen';
+import NotificationsScreen from './src/screens/NotificationsScreen';
 import FaqScreen from './src/screens/FaqScreen';
 import agregarMascotaScreen from './src/screens/agregarMascotaScreen';
 import AddPetLocationScreen from './src/screens/AddPetLocationScreen';
@@ -29,6 +33,10 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="MyPublications" component={MyPublicationsScreen} />
+        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} />
         <Stack.Screen name="FAQ" component={FaqScreen} />
         <Stack.Screen name="AddPet" component={agregarMascotaScreen} />
         <Stack.Screen name="AddPetLocation" component={AddPetLocationScreen} />
