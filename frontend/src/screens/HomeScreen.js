@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable } from 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavBar from './BottomNavBar';
 
-// ⚠️ Ejemplo de datos locales con la MISMA forma que tu tabla
+//  Ejemplo de datos locales con la MISMA forma que tu tabla
 const publications = [
   {
     id: 1,
