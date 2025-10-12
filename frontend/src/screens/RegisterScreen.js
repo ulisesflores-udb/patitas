@@ -194,12 +194,38 @@ export default function RegisterScreen({ navigation }) {
             onChangeText={setUsername}
           />
 
+          <Text style={styles.label}>Contraseña</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Contraseña Segura"
+            placeholderTextColor="#6A4E23"
+            value={username}
+            onChangeText={setUsername}
+          />
+
+          <Text style={styles.label}>Repetir Contraseña</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Contraseña"
+            placeholderTextColor="#6A4E23"
+            value={username}
+            onChangeText={setUsername}
+          />
+
           {/* Botón de registro */}
           <TouchableOpacity 
             style={styles.registerButton}
             onPress={() => navigation.navigate('Home')}>
             <Text style={styles.registerButtonText}>Registrarse</Text>
           </TouchableOpacity>
+
+          {/* Enlace para ir a Login */}
+          <View style={styles.loginLinkContainer}>
+            <Text style={styles.loginLinkText}>¿Ya tienes cuenta? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.loginLinkBold}>Inicia sesión</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -334,5 +360,21 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  loginLinkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  loginLinkText: {
+    fontSize: 16,
+    color: '#4B2E0C',
+  },
+  loginLinkBold: {
+    fontSize: 16,
+    color: '#4B2E0C',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });

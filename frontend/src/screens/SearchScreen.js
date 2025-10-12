@@ -1,44 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import BottomNavBar from './BottomNavBar';
 
-export default function HomeScreen({ navigation }) {
-  // Datos de ejemplo para las mascotas (primeros 4)
-  const pets = [
-    {
-      id: 1,
-      name: 'Firulais',
-      location: 'Col. Escalón, San Salvador',
-      species: 'Perro',
-      breed: 'Golden Retriever',
-    },
-    {
-      id: 2,
-      name: 'Mimi',
-      location: 'Col. Escalón, San Salvador',
-      species: 'Gato',
-      breed: 'Persa',
-    },
-    {
-      id: 3,
-      name: 'Rex',
-      location: 'Col. Escalón, San Salvador',
-      species: 'Perro',
-      breed: 'Pastor Alemán',
-    },
-    {
-      id: 4,
-      name: 'Whiskers',
-      location: 'Col. Escalón, San Salvador',
-      species: 'Gato',
-      breed: 'Siamés',
-    },
+export default function SearchScreen({ navigation }) {
+  // Array con muchas mascotas
+  const allPets = [
+    { id: 1, name: 'Firulais', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Golden Retriever' },
+    { id: 2, name: 'Mimi', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Persa' },
+    { id: 3, name: 'Rex', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Pastor Alemán' },
+    { id: 4, name: 'Whiskers', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Siamés' },
+    { id: 5, name: 'Buddy', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Labrador' },
+    { id: 6, name: 'Luna', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Gato Callejero' },
+    { id: 7, name: 'Max', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Bulldog' },
+    { id: 8, name: 'Fluffy', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Angora' },
+    { id: 9, name: 'Charlie', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Cocker Spaniel' },
+    { id: 10, name: 'Nala', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Bengalí' },
+    { id: 11, name: 'Rocky', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Rottweiler' },
+    { id: 12, name: 'Bella', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Ragdoll' },
+    { id: 13, name: 'Cooper', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Beagle' },
+    { id: 14, name: 'Shadow', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Gato Negro' },
+    { id: 15, name: 'Duke', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Doberman' },
+    { id: 16, name: 'Smokey', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Gato Gris' },
+    { id: 17, name: 'Oliver', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Shiba Inu' },
+    { id: 18, name: 'Mittens', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Gato Blanco' },
   ];
 
   const PetCard = ({ pet }) => (
     <View style={styles.card}>
-      {/* Imagen del placeholder de mascota */}
       <View style={styles.imageContainer}>
         <View style={styles.placeholderImage}>
           <View style={styles.headCircle} />
@@ -46,7 +36,6 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
-      {/* Información de la mascota */}
       <View style={styles.cardInfo}>
         <Text style={styles.petName}>{pet.name}</Text>
         <Text style={styles.petLocation}>Ubicación: {pet.location}</Text>
@@ -65,8 +54,15 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        {/* Header */}
-        <Text style={styles.header}>Bienvenido Juan Pérez</Text>
+        {/* Header con botón de regreso */}
+        <View style={styles.header}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={28} color="#4B2E0C" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Todos los animales</Text>
+        </View>
 
         {/* Lista de mascotas */}
         <ScrollView 
@@ -74,22 +70,15 @@ export default function HomeScreen({ navigation }) {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
           <View style={styles.grid}>
-            {pets.map((pet) => (
+            {allPets.map((pet) => (
               <PetCard key={pet.id} pet={pet} />
             ))}
           </View>
-
-          {/* Botón Ver más */}
-          <TouchableOpacity 
-            style={styles.seeMoreButton}
-            onPress={() => navigation.navigate('Search')}>
-            <Text style={styles.seeMoreText}>Ver más</Text>
-          </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
 
       {/* Navbar inferior */}
-      <BottomNavBar navigation={navigation} currentScreen="Home" />
+      <BottomNavBar navigation={navigation} currentScreen="Search" />
     </View>
   );
 }
@@ -103,12 +92,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#4B2E0C',
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 15,
+  },
+  backButton: {
+    marginRight: 15,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#4B2E0C',
   },
   scrollView: {
     flex: 1,
@@ -195,20 +191,6 @@ const styles = StyleSheet.create({
   arrow: {
     fontSize: 24,
     color: '#fff',
-    fontWeight: 'bold',
-  },
-  seeMoreButton: {
-    backgroundColor: '#6A4E23',
-    paddingVertical: 15,
-    paddingHorizontal: 50,
-    borderRadius: 12,
-    alignSelf: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  seeMoreText: {
-    color: '#fff',
-    fontSize: 16,
     fontWeight: 'bold',
   },
 });
