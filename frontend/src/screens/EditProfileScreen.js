@@ -23,8 +23,8 @@ export default function EditProfileScreen({ navigation, departamentos, municipio
   const [municipio, setMunicipio] = useState(usuario ? usuario.id_municipio : null); 
   const [distrito, setDistrito] = useState(usuario ? usuario.id_distrito : null);
 
-  const [filteredMunicipios, setFilteredMunicipios] = useState([usuario ? municipios.filter(m => parseInt(m.id_departamento) === parseInt(usuario.id_departamento)) : []]); 
-  const [distritos, setDistritos] = useState([usuario ? usuarios.filter(u => parseInt(u.id_municipio) === parseInt(usuario.id_municipio)) : []]);
+  const [filteredMunicipios, setFilteredMunicipios] = useState([]); 
+  const [distritos, setDistritos] = useState([]);
   const [isLoadingDistritos, setIsLoadingDistritos] = useState(false);
 
   useEffect(() => {
@@ -83,8 +83,6 @@ export default function EditProfileScreen({ navigation, departamentos, municipio
       correo,
       genero,
       telefono,
-      id_departamento: departmento,
-      id_municipio: municipio,
       id_distrito: distrito,
       colonia,
       calle,

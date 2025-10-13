@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import BottomNavBar from './BottomNavBar';
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen({ navigation, usuario }) {
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -27,8 +27,8 @@ export default function ProfileScreen({ navigation }) {
                         style={styles.profileImage}
                     />
                     <View>
-                        <Text style={styles.name}></Text>
-                        <Text style={styles.phone}>+503 7213 8459</Text>
+                        <Text style={styles.name}>{usuario.nombre}</Text>
+                        <Text style={styles.phone}>{usuario.telefono}</Text>
                     </View>
                 </View>
 
