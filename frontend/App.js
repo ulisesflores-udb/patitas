@@ -120,7 +120,13 @@ export default function App() {
           />}
         </Stack.Screen>
 
-        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Profile">
+          { props => <ProfileScreen 
+            {...props} 
+            usuario = {usuarioLogeado} 
+          />}
+        </Stack.Screen>
+
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="MyPublications" component={MyPublicationsScreen} />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
