@@ -19,7 +19,13 @@ Route::resource('municipio', MunicipioController::class);
 Route::resource('distrito', DistritoController::class);
 Route::resource('especie', EspecieController::class);
 Route::resource('raza', RazaController::class);
-Route::resource('rol', RolController::class);
+Route::controller(RolController::class)->group(function() {
+    Route::get('/roles', 'index');
+    Route::get('/roles/{id}', 'edit');
+    Route::post('/roles', 'store');
+    Route::put('/roles/{id}', 'update');
+    Route::delete('/roles/{id}', 'destroy');
+});
 
 // Grupos
 /*
@@ -47,7 +53,7 @@ Route::controller(UsuarioController::class)->group(function() {
 
     Route::post('/login', 'login');
     Route::post('/register', 'store');
-    
+
 
     // Rutas para Usuario Administrador
     Route::get('/usuarios', 'getUsuarios');
@@ -77,6 +83,7 @@ Route::controller(PerdidaController::class)->group(function() {
 Route::controller(RespuestaController::class)->group(function() {
     // Rutas para Usuario Sin Color
     Route::get('/respuestas/{id}', 'getRespuestas');
+    Route::get('/respuestas/{id}', 'edit');
     Route::post('/respuestas', 'create');
     Route::put('/respuestas/{id}', 'update');
     Route::delete('/respuestas/{id}', 'destroy');
