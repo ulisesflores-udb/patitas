@@ -108,8 +108,9 @@ export default function App() {
               {...props}
               usuarioLogeado={usuarioLogeado}
               setUsuarioLogeado={setUsuarioLogeado}
-              />
-            }
+              perdidas={perdidas}
+            />
+          }
         </Stack.Screen>
         <Stack.Screen name="Search">
           { props => <SearchScreen 
