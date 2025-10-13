@@ -2,7 +2,7 @@
 # Patitas 🐾 — Backend Laravel + Frontend React Native (Expo)
 
 App para reportar y encontrar mascotas perdidas.  
-Incluye **API REST en Laravel** y **aplicación móvil/web en React Native (Expo)**.
+
 
 ---
 
@@ -33,6 +33,7 @@ Incluye **API REST en Laravel** y **aplicación móvil/web en React Native (Expo
 patitas/
 
 ├─ backend/ # API Laravel
+
 │ ├─ app/
 
 │ ├─ routes/api.php
