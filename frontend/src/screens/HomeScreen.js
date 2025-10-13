@@ -50,12 +50,12 @@ const RAZAS = {
   3: 'Beagle',
 };
 
-export default function HomeScreen({ navigation, usuarioLogeado, setUsuarioLogeado }) {
-  const Card = ({ pub }) => (
+export default function HomeScreen({ navigation, usuarioLogeado, setUsuarioLogeado, perdidas }) {
+  const Card = ({ pet }) => (
     <TouchableOpacity
       activeOpacity={0.9}
       style={styles.card}
-      onPress={() => navigation.navigate('PublicationDetail', { publication: pub })}
+      onPress={() => navigation.navigate('PublicationDetail', { pet })}
     >
       {/* Placeholder "foto" */}
       <View style={styles.imageContainer}>
@@ -66,21 +66,21 @@ export default function HomeScreen({ navigation, usuarioLogeado, setUsuarioLogea
       </View>
 
       <View style={styles.cardInfo}>
-        <Text style={styles.petName}>{pub.nombre_mascota}</Text>
-        <Text style={styles.petLocation}>Ubicación: {pub.direccion_maps || '—'}</Text>
+        <Text style={styles.petName}>{pet.nombre_mascota}</Text>
+        <Text style={styles.petLocation}>Ubicación: {pet.direccion_maps || '—'}</Text>
 
         <View style={styles.detailsRow}>
-          <Text style={styles.petDetails}>Raza: {RAZAS[pub.id_raza] || `ID ${pub.id_raza}`}</Text>
+          <Text style={styles.petDetails}>Raza: {pet.raza || '-'}</Text>
           <Pressable
             style={styles.arrowButton}
-            onPress={() => navigation.navigate('PublicationDetail', { publication: pub })}
+            onPress={() => navigation.navigate('PublicationDetail', { pet })}
             hitSlop={12}
           >
             <Text style={styles.arrow}>›</Text>
           </Pressable>
         </View>
 
-        <Text style={styles.petDetails}>Referencia: {pub.punto_referencia || '—'}</Text>
+        <Text style={styles.petDetails}>Referencia: {pet.punto_referencia || '—'}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -92,8 +92,8 @@ export default function HomeScreen({ navigation, usuarioLogeado, setUsuarioLogea
 
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.grid}>
-            {publications.map((p) => (
-              <Card key={p.id} pub={p} />
+            {perdidas.map((p) => (
+              <Card key={p.id} pet={p} />
             ))}
           </View>
 
