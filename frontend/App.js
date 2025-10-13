@@ -98,12 +98,19 @@ export default function App() {
               {...props}
               departamentos={departamentos}
               municipios={municipios}
-              distritos={distritos}
               usuarios={usuarios}
               setUsuarios={setUsuarios}
             />}
         </Stack.Screen>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home">
+          {props => 
+            <HomeScreen 
+              {...props}
+              usuarioLogeado={usuarioLogeado}
+              setUsuarioLogeado={setUsuarioLogeado}
+              />
+            }
+        </Stack.Screen>
         <Stack.Screen name="Search">
           { props => <SearchScreen 
             {...props} 

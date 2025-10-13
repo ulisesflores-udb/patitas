@@ -27,6 +27,7 @@ export default function LoginScreen({ navigation, usuarios, usuarioLogeado, setU
           alert('Inicio de sesión exitoso');
           console.log(response.data);
           setUsuarioLogeado(response.data);
+          console.log(usuarioLogeado);
           return navigation.navigate('Home');
         } 
       })

@@ -50,7 +50,7 @@ const RAZAS = {
   3: 'Beagle',
 };
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, usuarioLogeado, setUsuarioLogeado }) {
   const Card = ({ pub }) => (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -88,7 +88,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        <Text style={styles.header}>Bienvenido Juan Pérez</Text>
+        <Text style={styles.header}>Bienvenido {usuarioLogeado.nombre}</Text>
 
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.grid}>

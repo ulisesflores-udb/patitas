@@ -17,6 +17,9 @@ use App\Http\Controllers\UsuarioController;
 Route::resource('departamento', DepartamentoController::class);
 Route::resource('municipio', MunicipioController::class);
 Route::resource('distrito', DistritoController::class);
+Route::get('/distrito/{id_municipio}', [DistritoController::class, 'getByMunicipio']);
+
+
 Route::resource('especie', EspecieController::class);
 Route::resource('raza', RazaController::class);
 Route::controller(RolController::class)->group(function() {

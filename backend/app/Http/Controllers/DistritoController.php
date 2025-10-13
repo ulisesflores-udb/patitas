@@ -27,6 +27,14 @@ class DistritoController extends Controller
         }
     }
 
+    public function getByMunicipio($id_municipio)
+    {
+        if (!Municipio::find($id_municipio)) {
+            return response("Municipio no Encontrado", 404)->header('Content-Type', 'application/json');
+        }
+        $distritos = Distrito::where('id_municipio', $id_municipio)->get();
+        return response($distritos, 200)->header('Content-Type', 'application/json');
+    }
 
     /**
      * Store a newly created resource in storage.
