@@ -1,1 +1,3 @@
-export const API_URL = "http://127.0.0.1:8000/api"; //ip de la pc.
+const API_URL = "http://192.168.1.188:8000/api"; //ip de la pc.
+
+export default API_URL;

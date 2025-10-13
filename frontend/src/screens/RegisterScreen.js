@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation, departamentos, municipios, distritos, usuarios, setUsuarios }) {
   const [phone, setPhone] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -15,6 +15,16 @@ export default function RegisterScreen({ navigation }) {
   const [street, setStreet] = useState('');
   const [socialMedia, setSocialMedia] = useState('Facebook');
   const [username, setUsername] = useState('');
+
+
+  const handleRegister = () => {
+    
+    
+
+
+    navigation.navigate('Login');
+  };
+
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
@@ -88,9 +98,9 @@ export default function RegisterScreen({ navigation }) {
                   selectedValue={department}
                   onValueChange={setDepartment}
                   style={styles.picker}>
-                  <Picker.Item label="San Salvador" value="San Salvador" />
-                  <Picker.Item label="La Libertad" value="La Libertad" />
-                  <Picker.Item label="Santa Ana" value="Santa Ana" />
+                  {departamentos.map((dept) => (
+                    <Picker.Item key={dept.id} label={dept.nombre} value={dept.id} />
+                  ))}
                 </Picker>
               </View>
             </View>
@@ -101,9 +111,9 @@ export default function RegisterScreen({ navigation }) {
                   selectedValue={municipality}
                   onValueChange={setMunicipality}
                   style={styles.picker}>
-                  <Picker.Item label="San Salvador Centro" value="San Salvador Centro" />
-                  <Picker.Item label="Soyapango" value="Soyapango" />
-                  <Picker.Item label="Mejicanos" value="Mejicanos" />
+                  {municipios.map((mun) => (
+                    <Picker.Item key={mun.id} label={mun.nombre} value={mun.id} />
+                  ))}
                 </Picker>
               </View>
             </View>
@@ -116,8 +126,9 @@ export default function RegisterScreen({ navigation }) {
               selectedValue={district}
               onValueChange={setDistrict}
               style={styles.picker}>
-              <Picker.Item label="Distrito de San Salvador" value="Distrito de San Salvador" />
-              <Picker.Item label="Distrito 2" value="Distrito 2" />
+              {distritos.map((mun) => (
+                    <Picker.Item key={mun.id} label={mun.nombre} value={mun.id} />
+                  ))}
             </Picker>
           </View>
 
