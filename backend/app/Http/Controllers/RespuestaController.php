@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Respuesta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RespuestaController extends Controller
 {
@@ -11,7 +12,15 @@ class RespuestaController extends Controller
      * Display a listing of the resource.
      */
     public function getRespuestas($id) {
-        $respuestas = Respuesta::where('id_reporte', $id)->where('estado', 1)->get();
+        $respuestas = DB::table('respuestas as r')
+        ->join('usuarios as u', 'r.id_usuario', '=', 'u.id')
+        ->where('r.id_reporte', 1)
+        ->where('r.estado', 1)
+        ->select(
+            'r.*',
+            DB::raw("CONCAT_WS(' ', u.nombre, u.apellido) AS nombre")
+        )
+        ->get();
         return response()->json($respuestas);
     }
 
@@ -40,7 +49,7 @@ class RespuestaController extends Controller
         $respuesta->mostrar_redes = $mostrar_redes;
         $respuesta->timestamps = false;
         $respuesta->save();
-        return response()->json(['message' => 'Respuesta creada exitosamente', 'respuesta' => $respuesta], 200);
+        return response()->json(['message' => 'Respuesta creada exitosamente', 'respuesta' => $respuesta], 201);
     }
 
     /**

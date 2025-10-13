@@ -25,6 +25,7 @@ export default function LoginScreen({ navigation, usuarios, usuarioLogeado, setU
         if (response.status === 200) {
           console.log('Usuario encontrado')
           alert('Inicio de sesión exitoso');
+          console.log(response.data);
           setUsuarioLogeado(response.data);
           return navigation.navigate('Home');
         } 

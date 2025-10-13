@@ -11,9 +11,12 @@ class PerdidaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $perdidas =  Perdida::all();
+    public function index() {
+        $perdidas = Perdida::join('razas as r', 'perdidas.id_raza', '=', 'r.id')
+        ->join('especies as e', 'r.id_especie', '=', 'e.id')
+        ->join('usuarios as u', 'perdidas.id_usuario', '=', 'u.id')
+        ->select('perdidas.*', 'r.nombre as raza', 'e.nombre as especie', 'u.telefono')
+        ->get();
         return response($perdidas, 200)->header('Content-Type', 'application/json');
     }
 
@@ -77,7 +80,7 @@ class PerdidaController extends Controller
             return response("Campo Fecha de Pérdida debe tener el formato aaaa/mm/dd", 400)->header('Content-Type', 'application/json');
         } else if ($fecha_perdida > date('Y/m/d')) {
             return response("Campo Fecha de Pérdida no puede ser mayor a la fecha actual", 400)->header('Content-Type', 'application/json');
-        } 
+        }
 
         # Raza
         if (trim($id_raza) == "") {

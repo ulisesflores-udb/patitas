@@ -37,7 +37,7 @@ export default function App() {
   const [respuestas, setRespuestas] = useState([])
   const [usuarios, setUsuarios] = useState([])
 
-  const [usuarioLogeado, setUsuarioLogeado] = useState(null)
+  const [usuarioLogeado, setUsuarioLogeado] = useState("Vacío desde el inicio");
 
   useEffect(() => {
     const fetchObjects = async () => {
@@ -49,7 +49,6 @@ export default function App() {
           municipios,
           perdidas,
           razas,
-          // respuestas,
           usuarios
         ] = await Promise.all([
           axios.get(`http://192.168.1.188:8000/api/departamento`),
@@ -58,7 +57,6 @@ export default function App() {
           axios.get(`http://192.168.1.188:8000/api/municipio`),
           axios.get(`http://192.168.1.188:8000/api/perdidas`),
           axios.get(`http://192.168.1.188:8000/api/raza`),
-          // axios.get(`http://192.168.1.188:8000/api/respuesta`),
           axios.get(`http://192.168.1.188:8000/api/usuarios`)
         ]);
 
@@ -68,7 +66,6 @@ export default function App() {
         setMunicipios(municipios.data);
         setPerdidas(perdidas.data);
         setRazas(razas.data);
-        // setRespuestas(respuestas.data);
         setUsuarios(usuarios.data);
 
       } catch (error) {
@@ -107,7 +104,14 @@ export default function App() {
             />}
         </Stack.Screen>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Search">
+          { props => <SearchScreen 
+            {...props} 
+            allPets={perdidas}
+            usuario={usuarioLogeado} 
+          />}
+        </Stack.Screen>
+
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="MyPublications" component={MyPublicationsScreen} />
@@ -117,7 +121,12 @@ export default function App() {
         <Stack.Screen name="AddPet" component={agregarMascotaScreen} />
         <Stack.Screen name="AddPetLocation" component={AddPetLocationScreen} />
         <Stack.Screen name="PublicationDetail" component={PublicationDetailScreen} />
-        <Stack.Screen name="Responder" component={ResponderScreen} />
+        <Stack.Screen name="Responder">
+          { props => <ResponderScreen 
+            {...props} 
+            usuario = {usuarioLogeado} 
+          />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

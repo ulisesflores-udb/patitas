@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Linking, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import BottomNavBar from './BottomNavBar';
+import axios from 'axios';
 
 const colors = {
   bg: '#dbac7eff',
@@ -30,20 +31,30 @@ const formatDate = (s) => {
 };
 
 export default function PublicationDetailScreen({ navigation, route }) {
-  const { publication } = route.params || {};
-  const name = publication?.nombre_mascota || 'Mascota';
-  const razaNombre = RAZAS[publication?.id_raza] || (publication?.id_raza ? `Raza #${publication.id_raza}` : '—');
-  const descripcion = publication?.descripcion || '—';
-  const direccion = publication?.direccion_maps || '—';
-  const referencia = publication?.punto_referencia || '—';
-  const fechaPerdida = formatDate(publication?.fecha_perdida);
-  const fechaPublic = formatDate(publication?.fecha_public);
-  const lat = publication?.latitud ?? 13.6929;
-  const lng = publication?.longitud ?? -89.2182;
-  const radio = publication?.radio ?? 0;
-  const mostrarRedes = !!publication?.mostrar_redes;
-  const mostrarTel = !!publication?.mostrar_tel;
-  const foto = publication?.foto;
+  const { pet } = route.params || {};
+  const [respuestas, setRespuestas] = useState([]);
+  const id = pet?.id || 0;
+  const name = pet?.nombre_mascota || 'Mascota';
+  const razaNombre = pet?.raza || '-';
+  const descripcion = pet?.descripcion || '—';
+  const direccion = pet?.direccion_maps || '—';
+  const referencia = pet?.punto_referencia || '—';
+  const fechaPerdida = formatDate(pet?.fecha_perdida);
+  const fechaPublic = formatDate(pet?.fecha_public);
+  const lat = pet?.latitud ?? 13.6929;
+  const lng = pet?.longitud ?? -89.2182;
+  const radio = pet?.radio ?? 0;
+  const mostrarRedes = !!pet?.mostrar_redes;
+  const mostrarTel = !!pet?.mostrar_tel;
+  const foto = pet?.foto;
+
+  useEffect(() => {
+    const getRespuestas = async () => {
+      const res = await axios.get(`http://192.168.1.188:8000/api/respuestas/${id}`);
+      setRespuestas(res.data);
+    }
+    getRespuestas();
+  }, []);
 
   const openMap = () => navigation.navigate('Map', { title: name, lat, lng });
 
@@ -149,7 +160,7 @@ export default function PublicationDetailScreen({ navigation, route }) {
           </View>
 
           {/* Acciones */}
-          <TouchableOpacity style={[styles.cta, shadow]} onPress={() => navigation.navigate('Responder', { pet: { name, breed: razaNombre } })}>
+          <TouchableOpacity style={[styles.cta, shadow]} onPress={() => navigation.navigate('Responder', { pet: { name, breed: razaNombre }, id_reporte: id })}>
             <Ionicons name="chatbubble-ellipses-outline" size={20} color={colors.white} />
             <Text style={styles.ctaText}>¿Tienes información? Pulsa aquí</Text>
           </TouchableOpacity>
@@ -164,7 +175,7 @@ export default function PublicationDetailScreen({ navigation, route }) {
             {mostrarTel && (
               <TouchableOpacity
                 style={[styles.secondaryBtn, shadow]}
-                onPress={() => Linking.openURL('tel:+50300000000')} // ← reemplaza por el teléfono real
+                onPress={() => Linking.openURL('tel:+503' + (pet?.telefono || ''))}
               >
                 <Ionicons name="call-outline" size={18} color={colors.white} />
                 <Text style={styles.secondaryText}>Llamar</Text>
@@ -172,19 +183,24 @@ export default function PublicationDetailScreen({ navigation, route }) {
             )}
           </View>
 
-          {/* Respuestas (demo) */}
           <View style={[styles.cardSection, shadow]}>
             <Text style={styles.sectionTitle}>Respuestas</Text>
-            <View style={styles.answerItem}>
-              <View style={[styles.answerAvatar, shadow]}>
-                <Ionicons name="person" size={16} color={colors.white} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.answerAuthor}>Luis Cáceres</Text>
-                <Text style={styles.answerText}>Me parece haberlo visto cerca de la zona</Text>
-              </View>
-              <Ionicons name="time-outline" size={14} color={colors.white} />
-            </View>
+            {respuestas.length === 0 ? (
+              <Text style={{ color: colors.white, opacity: 0.7 }}>Aún no hay respuestas.</Text>
+            ) : (
+              respuestas.map((respuesta, idx) => (
+                <View key={idx} style={styles.answerItem}>
+                  <View style={[styles.answerAvatar, shadow]}>
+                    <Ionicons name="person" size={16} color={colors.white} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.answerAuthor}>{respuesta.nombre || 'Usuario'}</Text>
+                    <Text style={styles.answerText}>{respuesta.descripcion}</Text>
+                  </View>
+                  <Ionicons name="time-outline" size={14} color={colors.white} />
+                </View>
+              ))
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>

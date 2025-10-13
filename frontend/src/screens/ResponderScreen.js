@@ -3,22 +3,43 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Switch, Alert, Scr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import BottomNavBar from './BottomNavBar';
+import axios from 'axios';
 
-export default function ResponderScreen({ navigation, route }) {
+export default function ResponderScreen({ navigation, route, usuario }) {
   const { pet } = route.params;
-  const [nombre] = useState('Juan Pérez');
+  const { id_reporte } = route.params;
+  const petId = 1;
+  const [nombre, setNombre] = useState(usuario ? usuario.nombre : '');
   const [comentario, setComentario] = useState('');
   const [compartir, setCompartir] = useState(false);
 
-  const enviar = () => {
+  const enviar = async () => {
     if (!comentario.trim()) {
       Alert.alert('Falta información', 'Escribe un comentario.');
       return;
     }
-    Alert.alert('¡Respuesta enviada!', 'Gracias por tu ayuda.');
+
+    const res = await axios.post(`http://192.168.1.188:8000/api/respuestas`, {
+      id_usuario: usuario ? usuario.id : null,
+      id_reporte: id_reporte,
+      descripcion: comentario,
+      mostrar_tel: compartir ? 1 : 0,
+      mostrar_redes: compartir ? 1 : 0
+    }).then(response => {
+      if (response.status === 201) {
+        Alert.alert('¡Respuesta enviada!', 'Gracias por tu ayuda.');
+        console.log('Respuesta enviada:', response.data);
+      } else {
+        Alert.alert('Error', 'Hubo un problema al enviar tu respuesta. Inténtalo de nuevo.');
+        console.log('Error al enviar la respuesta:', response);
+      }
+    }).catch(error => {
+      console.error('Error al enviar la respuesta:', error);
+    });
+
     setComentario('');
     setCompartir(false);
-    navigation.goBack();
+    navigation.navigate('Search');
   };
 
   return (

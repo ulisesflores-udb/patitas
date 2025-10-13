@@ -4,16 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import BottomNavBar from './BottomNavBar';
 
-export default function SearchScreen({ navigation }) {
-  const allPets = [
-    { id: 1, name: 'Firulais', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Golden Retriever' },
-    { id: 2, name: 'Mimi', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Persa' },
-    { id: 3, name: 'Rex', location: 'Col. Escalón, San Salvador', species: 'Perro', breed: 'Pastor Alemán' },
-    { id: 4, name: 'Whiskers', location: 'Col. Escalón, San Salvador', species: 'Gato', breed: 'Siamés' },
-    { id: 5, name: 'Boby', location: 'Antiguo Cuscatlán', species: 'Perro', breed: 'Beagle' },
-    { id: 6, name: 'Luna', location: 'Santa Tecla', species: 'Perro', breed: 'Labrador' },
-  ];
-
+export default function SearchScreen({ navigation, allPets, usuario }) {
   const PetCard = ({ pet }) => (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -28,11 +19,11 @@ export default function SearchScreen({ navigation }) {
       </View>
 
       <View style={styles.cardInfo}>
-        <Text style={styles.petName}>{pet.name}</Text>
-        <Text style={styles.petLocation}>Ubicación: {pet.location}</Text>
+        <Text style={styles.petName}>{pet.nombre_mascota}</Text>
+        <Text style={styles.petLocation}>Ubicación: {pet.direccion_maps}</Text>
 
         <View style={styles.detailsRow}>
-          <Text style={styles.petDetails}>Especie: {pet.species}</Text>
+          <Text style={styles.petDetails}>Especie: {pet.especie}</Text>
           <Pressable
             style={styles.arrowButton}
             onPress={() => navigation.navigate('PublicationDetail', { pet })}
@@ -42,7 +33,7 @@ export default function SearchScreen({ navigation }) {
           </Pressable>
         </View>
 
-        <Text style={styles.petDetails}>Raza: {pet.breed}</Text>
+        <Text style={styles.petDetails}>Raza: {pet.raza}</Text>
       </View>
     </TouchableOpacity>
   );

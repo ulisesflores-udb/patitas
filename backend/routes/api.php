@@ -83,7 +83,7 @@ Route::controller(PerdidaController::class)->group(function() {
 Route::controller(RespuestaController::class)->group(function() {
     // Rutas para Usuario Sin Color
     Route::get('/respuestas/{id}', 'getRespuestas');
-    Route::get('/respuestas/{id}', 'edit');
+    Route::get('/respuestas/edit/{id}', 'edit');
     Route::post('/respuestas', 'create');
     Route::put('/respuestas/{id}', 'update');
     Route::delete('/respuestas/{id}', 'destroy');
