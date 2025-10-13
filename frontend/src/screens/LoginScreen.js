@@ -1,10 +1,43 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
+import {API_URL} from '../config/config';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, usuarios, usuarioLogeado, setUsuarioLogeado }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const checkLogin = async () => {
+
+    if (!email || !password) {
+      alert('Por favor ingresa tu correo y contraseña');
+      return;
+    }
+
+
+    const usuario = await axios.post('http://192.168.1.188:8000/api/login', {
+        correo: email,
+        pass: password,
+      }
+    )
+      .then(response => {
+        if (response.status === 200) {
+          console.log('Usuario encontrado')
+          alert('Inicio de sesión exitoso');
+          console.log(response.data);
+          setUsuarioLogeado(response.data);
+          console.log(usuarioLogeado);
+          return navigation.navigate('Home');
+        } 
+      })
+      .catch(error => {
+        alert('Correo o contraseña incorrectos');
+        // console.log(error.response);
+        return null;
+      })
+  };
+
 
   return (
     <View style={styles.container}>
@@ -52,7 +85,7 @@ export default function LoginScreen({ navigation }) {
 
           <TouchableOpacity 
             style={styles.loginButton}
-            onPress={() => navigation.navigate('Home')}>
+            onPress={checkLogin}>
             <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
           </TouchableOpacity>
 

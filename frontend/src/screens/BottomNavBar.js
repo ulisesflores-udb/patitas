@@ -27,10 +27,8 @@ export default function BottomNavBar({ navigation, currentScreen }) {
       </TouchableOpacity>
 
       {/* Agregar (botón central más grande) */}
-      <TouchableOpacity 
-        style={styles.addButton}
-        onPress={() => navigation.navigate('AddPet')}>
-        <Ionicons name="add" size={40} color="#fff" />
+      <TouchableOpacity onPress={() => navigation.navigate('AddPet')}>
+        <Ionicons name="add" size={28} color="#fff" />
       </TouchableOpacity>
 
       {/* Notificaciones */}

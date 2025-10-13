@@ -16,13 +16,22 @@ use App\Http\Controllers\UsuarioController;
 
 Route::resource('departamento', DepartamentoController::class);
 Route::resource('municipio', MunicipioController::class);
+Route::get('/distrito/{id_municipio}', [DistritoController::class, 'getByMunicipio']);
 Route::resource('distrito', DistritoController::class);
+
+
 Route::resource('especie', EspecieController::class);
 Route::resource('raza', RazaController::class);
-Route::resource('rol', RolController::class);
+Route::controller(RolController::class)->group(function() {
+    Route::get('/roles', 'index');
+    Route::get('/roles/{id}', 'edit');
+    Route::post('/roles', 'store');
+    Route::put('/roles/{id}', 'update');
+    Route::delete('/roles/{id}', 'destroy');
+});
 
 // Grupos
-/* 
+/*
     Usuario Sin Color
     - CRUD Perfil
     - CRUD Respuestas
@@ -42,15 +51,19 @@ Route::controller(UsuarioController::class)->group(function() {
     // CRUD Perfil
     Route::get('/perfil', 'index');
     Route::post('/perfil', 'store');
-    Route::put('/perfil/{id}', 'update');
-    Route::delete('/perfil/{id}', 'destroy');
-    
+    Route::put('/perfil/{usuario}', 'update');
+    Route::delete('/perfil/{usuario}', 'destroy');
+
+    Route::post('/login', 'login');
+    Route::post('/register', 'store');
+
 
     // Rutas para Usuario Administrador
-    Route::get('/usuarios', 'index');
+    Route::get('/usuarios', 'getUsuarios');
+    Route::get('/usuarios/{usuario}', 'edit');
     Route::post('/usuarios', 'store');
-    Route::put('/usuarios/{id}', 'update');
-    Route::delete('/usuarios/{id}', 'destroy'); 
+    Route::put('/usuarios/{usuario}', 'update');
+    Route::delete('/usuarios/{usuario}', 'destroy');
 });
 
 
@@ -72,16 +85,17 @@ Route::controller(PerdidaController::class)->group(function() {
 // Respuestas
 Route::controller(RespuestaController::class)->group(function() {
     // Rutas para Usuario Sin Color
-    Route::get('/usuario/respuestas/{id}', 'index');
-    Route::post('/usuario/respuestas', 'store');
-    Route::put('/usuario/respuestas/{id}', 'update');
-    Route::delete('/usuario/respuestas/{id}', 'destroy');
-
-    // Rutas para Usuario Administrador
-    Route::get('/respuestas', 'index');
-    Route::post('/respuestas', 'store');
+    Route::get('/respuestas/{id}', 'getRespuestas');
+    Route::get('/respuestas/edit/{id}', 'edit');
+    Route::post('/respuestas', 'create');
     Route::put('/respuestas/{id}', 'update');
     Route::delete('/respuestas/{id}', 'destroy');
+
+    // Rutas para Usuario Administrador
+    Route::get('/administrador/respuestas', 'getRespuestas');
+    Route::post('/administrador/respuestas', 'create');
+    Route::put('/administrador/respuestas/{id}', 'update');
+    Route::delete('/administrador/respuestas/{id}', 'destroy');
 });
 
 // Chats
