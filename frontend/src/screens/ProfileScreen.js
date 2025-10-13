@@ -27,7 +27,7 @@ export default function ProfileScreen({ navigation }) {
                         style={styles.profileImage}
                     />
                     <View>
-                        <Text style={styles.name}>Juan Pérez</Text>
+                        <Text style={styles.name}></Text>
                         <Text style={styles.phone}>+503 7213 8459</Text>
                     </View>
                 </View>

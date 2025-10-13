@@ -20,7 +20,7 @@ export default function RegisterScreen({ navigation, departamentos, municipios, 
   const [pass, setPass] = useState('');
   const [estado, setEstado] = useState(1);
 
-   const [departmento, setDepartmento] = useState(null);
+  const [departmento, setDepartmento] = useState();
   const [municipio, setMunicipio] = useState(null); 
   const [distrito, setDistrito] = useState(null);
 
@@ -84,18 +84,16 @@ useEffect(() => {
       id_rol: rol,
       nombre,
       apellido,
-      correo,
       genero,
-      telefono,
-      id_departamento: departmento,
-      id_municipio: municipio,
+      correo,
+      pass,
       id_distrito: distrito,
       colonia,
       calle,
       red_social,
       usuario_redes,
-      pass,
       estado,
+      telefono,
     };
 
 

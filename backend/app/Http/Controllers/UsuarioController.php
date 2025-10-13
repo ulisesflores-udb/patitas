@@ -71,6 +71,10 @@ class UsuarioController extends Controller {
         $genero = $request->genero;
         $id_rol = $request->id_rol;
         $id_distrito = $request->id_distrito;
+        $colonia = $request->colonia;
+        $calle = $request->calle;
+        $red_social = $request->red_social;
+        $usuario_redes = $request->usuario_redes;
         $estado = $request->estado;
 
         if (trim($nombre) == "") {
@@ -117,6 +121,22 @@ class UsuarioController extends Controller {
             return response("Campo Distrito Vacío", 400)->header('Content-Type', 'application/json');
         }
 
+        if (trim($colonia) == "") {
+            return response("Campo Colonia Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        if (trim($calle) == "") {
+            return response("Campo Calle Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        if (trim($red_social) == "") {
+            return response("Campo Red Social Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        if (trim($usuario_redes) == "") {
+            return response("Campo Usuario en Red Social Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
         if (trim($estado) == "") {
             return response("Campo Estado Vacío", 400)->header('Content-Type', 'application/json');
         }
@@ -131,6 +151,11 @@ class UsuarioController extends Controller {
         $usuario->genero = $genero;
         $usuario->id_rol = $id_rol;
         $usuario->id_distrito = $id_distrito;
+        $usuario->telefono = $telefono;
+        $usuario->colonia = $colonia;
+        $usuario->calle = $calle;
+        $usuario->red_social = $red_social;
+        $usuario->usuario_redes = $usuario_redes;
         $usuario->estado = $estado;
         $usuario->save();
         return response($usuario, 200)->header('Content-Type', 'application/json');

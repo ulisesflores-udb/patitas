@@ -1,216 +1,361 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 
-export default function EditProfileScreen({ navigation }) {
-  const [phone, setPhone] = useState('7213 8459');
-  const [firstName, setFirstName] = useState('Juan');
-  const [lastName, setLastName] = useState('Pérez');
-  const [department, setDepartment] = useState('San Salvador');
-  const [municipality, setMunicipality] = useState('San Salvador Centro');
-  const [district, setDistrict] = useState('Distrito de San Salvador');
-  const [colony, setColony] = useState('Colonia Escalón');
-  const [street, setStreet] = useState('Calle Principal');
-  const [socialMedia, setSocialMedia] = useState('Facebook');
-  const [username, setUsername] = useState('Juan Perez');
+export default function EditProfileScreen({ navigation, departamentos, municipios, usuario, setUsuarioLogeado, usuarios, setUsuarios }) {
+
+  const [rol, setRol] = useState(2);
+  const [telefono, setTelefono] = useState(usuario ? usuario.telefono.toString() : '');
+  const [nombre, setNombre] = useState(usuario ? usuario.nombre : '');
+  const [apellido, setApellido] = useState(usuario ? usuario.apellido : '');
+  const [correo, setCorreo] = useState(usuario ? usuario.correo : '');
+  const [genero, setGenero] = useState(usuario ? usuario.genero : 'MASCULINO');
+
+  const [colonia, setColonia] = useState(usuario ? usuario.colonia : '');
+  const [calle, setCalle] = useState(usuario ? usuario.calle : '');
+  const [red_social, setRed_social] = useState(usuario ? usuario.red_social : 'Facebook');
+  const [usuario_redes, setUsuario_redes] = useState(usuario ? usuario.usuario_redes : '');
+  const [estado, setEstado] = useState(usuario ? usuario.estado : 1);
+
+  const [departmento, setDepartmento] = useState(usuario ? usuario.id_departamento : null);
+  const [municipio, setMunicipio] = useState(usuario ? usuario.id_municipio : null); 
+  const [distrito, setDistrito] = useState(usuario ? usuario.id_distrito : null);
+
+  const [filteredMunicipios, setFilteredMunicipios] = useState([usuario ? municipios.filter(m => parseInt(m.id_departamento) === parseInt(usuario.id_departamento)) : []]); 
+  const [distritos, setDistritos] = useState([usuario ? usuarios.filter(u => parseInt(u.id_municipio) === parseInt(usuario.id_municipio)) : []]);
+  const [isLoadingDistritos, setIsLoadingDistritos] = useState(false);
+
+  useEffect(() => {
+    if (departmento) {
+      const municipiosDelDepto = municipios.filter(m => parseInt(m.id_departamento) === parseInt(departmento));
+      setFilteredMunicipios(municipiosDelDepto);
+    } else {
+      setFilteredMunicipios([]);
+    }
+    
+    setMunicipio(null);
+    setDistrito(null);
+    setDistritos([]);
+  }, [departmento]); 
+
+  useEffect(() => {
+    if (municipio) {
+      console.log(municipio)
+      const fetchDistritos = async () => {
+        setIsLoadingDistritos(true);
+        setDistritos([]);
+        setDistrito(null); 
+        try {
+          
+          const response = await axios.get(`http://192.168.1.188:8000/api/distrito/${municipio}`);
+          setDistritos(response.data);
+        } catch (error) {
+          console.error("Error al obtener los distritos:", error);
+          alert('No se pudieron cargar los distritos. Intente de nuevo.');
+        } finally {
+          setIsLoadingDistritos(false);
+        }
+      };
+      fetchDistritos();
+    }
+  }, [municipio]);
 
   const handleSaveChanges = () => {
-    // Aquí iría la lógica para guardar los cambios
+    if (!telefono || !nombre || !apellido || !correo || !departmento || !municipio || !distrito || !colonia || !calle || !red_social || !usuario_redes || !pass) {
+      alert('Por favor completa todos los campos');
+      return;
+    }
+
+    if (!/^[67]\d{7}$/.test(telefono)) {
+      alert('El número de teléfono debe tener 8 dígitos e iniciar con el numero 6 o 7');
+      return;
+    } else {
+      setTelefono(parseInt(telefono));
+    }
+    
+    
+    const newUser = {
+      id_rol: rol,
+      nombre,
+      apellido,
+      correo,
+      genero,
+      telefono,
+      id_departamento: departmento,
+      id_municipio: municipio,
+      id_distrito: distrito,
+      colonia,
+      calle,
+      red_social,
+      usuario_redes,
+      pass,
+      estado,
+    };
+
+
+    const resp = axios.post('http://192.168.1.188:8000/api/usuarios', newUser)
+    .then(response => {
+      if (response.status === 200) {
+        console.log('Usuario Editado');
+        alert('Edición exitosa');
+        setUsuarios();
+        navigation.navigate('Login');
+      }
+    })
+    .catch(error => {
+      alert(error.response.data || 'Error al registrar usuario');
+      console.log(error.response.data);
+      return;
+    });
     alert('Cambios guardados exitosamente');
     navigation.goBack();
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <ScrollView 
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}>
-        
-        {/* Header con botón de regreso */}
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={() => navigation.goBack()}>
-            <Ionicons name="chevron-back" size={28} color="#4B2E0C" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Editar Perfil</Text>
-        </View>
-
-        {/* Imagen de perfil */}
-        <View style={styles.profileContainer}>
-          <Image 
-            source={require('../../assets/Default PFP.png')} 
-            style={styles.profileImage} 
-          />
-          <TouchableOpacity style={styles.editButton}>
-            <Ionicons name="pencil" size={20} color="#fff" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Formulario */}
-        <View style={styles.formContainer}>
-          {/* Teléfono */}
-          <Text style={styles.label}>Teléfono</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="7213 8459"
-            placeholderTextColor="#6A4E23"
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
-          />
-
-          {/* Nombre y Apellido en fila */}
-          <View style={styles.row}>
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Nombre</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Juan"
-                placeholderTextColor="#6A4E23"
-                value={firstName}
-                onChangeText={setFirstName}
-              />
-            </View>
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Apellido</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Pérez"
-                placeholderTextColor="#6A4E23"
-                value={lastName}
-                onChangeText={setLastName}
-              />
-            </View>
-          </View>
-
-          {/* Departamento y Municipio en fila */}
-          <View style={styles.row}>
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Departamento</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={department}
-                  onValueChange={setDepartment}
-                  style={styles.picker}>
-                  <Picker.Item label="San Salvador" value="San Salvador" />
-                  <Picker.Item label="La Libertad" value="La Libertad" />
-                  <Picker.Item label="Santa Ana" value="Santa Ana" />
-                </Picker>
-              </View>
-            </View>
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Municipio</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={municipality}
-                  onValueChange={setMunicipality}
-                  style={styles.picker}>
-                  <Picker.Item label="San Salvador Centro" value="San Salvador Centro" />
-                  <Picker.Item label="Soyapango" value="Soyapango" />
-                  <Picker.Item label="Mejicanos" value="Mejicanos" />
-                </Picker>
-              </View>
-            </View>
-          </View>
-
-          {/* Distrito */}
-          <Text style={styles.label}>Distrito</Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={district}
-              onValueChange={setDistrict}
-              style={styles.picker}>
-              <Picker.Item label="Distrito de San Salvador" value="Distrito de San Salvador" />
-              <Picker.Item label="Distrito 2" value="Distrito 2" />
-            </Picker>
-          </View>
-
-          {/* Colonia y Calle en fila */}
-          <View style={styles.row}>
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Colonia</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Colonia Escalón"
-                placeholderTextColor="#6A4E23"
-                value={colony}
-                onChangeText={setColony}
-              />
-            </View>
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Calle</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Calle Principal"
-                placeholderTextColor="#6A4E23"
-                value={street}
-                onChangeText={setStreet}
-              />
-            </View>
-          </View>
-
-          {/* Redes Sociales */}
-          <View style={styles.socialMediaContainer}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+        <ScrollView 
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}>
+          {/* Header con botón de regreso */}
+          <View style={styles.header}>
             <TouchableOpacity 
-              style={styles.radioOption}
-              onPress={() => setSocialMedia('Facebook')}>
-              <View style={[styles.radioCircle, socialMedia === 'Facebook' && styles.radioSelected]}>
-                {socialMedia === 'Facebook' && <View style={styles.radioInner} />}
-              </View>
-              <Text style={styles.radioText}>Facebook</Text>
+              style={styles.backButton} 
+              onPress={() => navigation.goBack()}>
+              <Ionicons name="chevron-back" size={28} color="#4B2E0C" />
             </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={styles.radioOption}
-              onPress={() => setSocialMedia('Twitter')}>
-              <View style={[styles.radioCircle, socialMedia === 'Twitter' && styles.radioSelected]}>
-                {socialMedia === 'Twitter' && <View style={styles.radioInner} />}
-              </View>
-              <Text style={styles.radioText}>X (Twitter)</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={styles.radioOption}
-              onPress={() => setSocialMedia('Instagram')}>
-              <View style={[styles.radioCircle, socialMedia === 'Instagram' && styles.radioSelected]}>
-                {socialMedia === 'Instagram' && <View style={styles.radioInner} />}
-              </View>
-              <Text style={styles.radioText}>Instagram</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={styles.radioOption}
-              onPress={() => setSocialMedia('TikTok')}>
-              <View style={[styles.radioCircle, socialMedia === 'TikTok' && styles.radioSelected]}>
-                {socialMedia === 'TikTok' && <View style={styles.radioInner} />}
-              </View>
-              <Text style={styles.radioText}>TikTok</Text>
+            <Text style={styles.headerTitle}>Regresar</Text>
+          </View>
+  
+          {/* Imagen de perfil */}
+          <View style={styles.profileContainer}>
+            <Image 
+              source={require('../../assets/Default PFP.png')} 
+              style={styles.profileImage} 
+            />
+            <TouchableOpacity style={styles.editButton}>
+              <Ionicons name="pencil" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
-
-          {/* Usuario en la Red Social */}
-          <Text style={styles.label}>Usuario en la Red Social</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Juan Perez"
-            placeholderTextColor="#6A4E23"
-            value={username}
-            onChangeText={setUsername}
-          />
-
-          {/* Botón Guardar Cambios */}
-          <TouchableOpacity 
-            style={styles.saveButton}
-            onPress={handleSaveChanges}>
-            <Text style={styles.saveButtonText}>Guardar Cambios</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+  
+          {/* Formulario */}
+          <View style={styles.formContainer}>
+            {/* Teléfono */}
+            <Text style={styles.label}>Teléfono</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="72138459"
+              placeholderTextColor="#6A4E23"
+              value={telefono}
+              onChangeText={setTelefono}
+              keyboardType="phone-pad"
+            />
+  
+            {/* Nombre y Apellido en fila */}
+            <View style={styles.row}>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Nombre</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Juan"
+                  placeholderTextColor="#6A4E23"
+                  value={nombre}
+                  onChangeText={setNombre}
+                />
+              </View>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Apellido</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Pérez"
+                  placeholderTextColor="#6A4E23"
+                  value={apellido}
+                  onChangeText={setApellido}
+                />
+              </View>
+            </View>
+  
+          
+  
+            <View style={styles.row}>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Correo</Text>  
+              <TextInput
+                style={styles.input}
+                placeholder="correo@gmail.com"
+                placeholderTextColor="#6A4E23"
+                value={correo}
+                onChangeText={setCorreo}
+                keyboardType="phone-pad"
+              />
+              </View>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Genero</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={genero}
+                    onValueChange={setGenero}
+                    style={styles.picker}>
+                    <Picker.Item label="MASCULINO" value="MASCULINO" />
+                    <Picker.Item label="FEMENINO" value="Femenino" />
+                  </Picker>
+                </View>
+              </View>
+            </View>
+  
+            {/* Departamento y Municipio en fila */}
+            <View style={styles.row}>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Departamento</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={departmento}
+                    onValueChange={setDepartmento}
+                    style={styles.picker}>
+                    {departamentos.map((dept) => (
+                      <Picker.Item key={dept.id} label={dept.nombre} value={dept.id} />
+                    ))}
+                  </Picker>
+                </View>
+              </View>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Municipio</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={municipio}
+                    onValueChange={setMunicipio}
+                    style={styles.picker}>
+                    {filteredMunicipios.map((mun) => (
+                                  <Picker.Item key={mun.id} label={mun.nombre} value={mun.id} />
+                              ))}
+                  </Picker>
+                </View>
+              </View>
+            </View>
+  
+            {/* Distrito */}
+            <Text style={styles.label}>Distrito</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={distrito}
+                onValueChange={setDistrito}
+                style={styles.picker}>
+                {distritos.map((dist) => (
+                          <Picker.Item key={dist.id} label={dist.nombre} value={dist.id} />
+                      ))}
+              </Picker>
+            </View>
+  
+            {/* Colonia y Calle en fila */}
+            <View style={styles.row}>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Colonia</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Colonia Escalón"
+                  placeholderTextColor="#6A4E23"
+                  value={colonia}
+                  onChangeText={setColonia}
+                />
+              </View>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Calle</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Calle Principal"
+                  placeholderTextColor="#6A4E23"
+                  value={calle}
+                  onChangeText={setCalle}
+                />
+              </View>
+            </View>
+  
+            {/* Redes Sociales */}
+            <View style={styles.socialMediaContainer}>
+              <TouchableOpacity 
+                style={styles.radioOption}
+                onPress={() => setRed_social('Facebook')}>
+                <View style={[styles.radioCircle, red_social === 'Facebook' && styles.radioSelected]}>
+                  {red_social === 'Facebook' && <View style={styles.radioInner} />}
+                </View>
+                <Text style={styles.radioText}>Facebook</Text>
+              </TouchableOpacity>
+  
+              <TouchableOpacity 
+                style={styles.radioOption}
+                onPress={() => setRed_social('Twitter')}>
+                <View style={[styles.radioCircle, red_social === 'Twitter' && styles.radioSelected]}>
+                  {red_social === 'Twitter' && <View style={styles.radioInner} />}
+                </View>
+                <Text style={styles.radioText}>X (Twitter)</Text>
+              </TouchableOpacity>
+  
+              <TouchableOpacity 
+                style={styles.radioOption}
+                onPress={() => setRed_social('Instagram')}>
+                <View style={[styles.radioCircle, red_social === 'Instagram' && styles.radioSelected]}>
+                  {red_social === 'Instagram' && <View style={styles.radioInner} />}
+                </View>
+                <Text style={styles.radioText}>Instagram</Text>
+              </TouchableOpacity>
+  
+              <TouchableOpacity 
+                style={styles.radioOption}
+                onPress={() => setRed_social('TikTok')}>
+                <View style={[styles.radioCircle, red_social === 'TikTok' && styles.radioSelected]}>
+                  {red_social === 'TikTok' && <View style={styles.radioInner} />}
+                </View>
+                <Text style={styles.radioText}>TikTok</Text>
+              </TouchableOpacity>
+            </View>
+  
+            {/* Usuario en la Red Social */}
+            <Text style={styles.label}>Usuario en la Red Social</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Juan Perez"
+              placeholderTextColor="#6A4E23"
+              value={usuario_redes}
+              onChangeText={setUsuario_redes}
+            />
+  
+            {/* <Text style={styles.label}>Contraseña</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              placeholderTextColor="#6A4E23"
+              value={pass}
+              onChangeText={setPass}
+            /> */}
+  
+            {/* <Text style={styles.label}>Repetir Contraseña</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              placeholderTextColor="#6A4E23"
+              value={username}
+              onChangeText={setUsername}
+            /> */}
+  
+            {/* Botón de registro */}
+            <TouchableOpacity 
+              style={styles.registerButton}
+              onPress={handleSaveChanges}>
+              <Text style={styles.registerButtonText}>Registrarse</Text>
+            </TouchableOpacity>
+  
+            {/* Enlace para ir a Login */}
+            <View style={styles.loginLinkContainer}>
+              <Text style={styles.loginLinkText}>¿Ya tienes cuenta? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.loginLinkBold}>Inicia sesión</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
