@@ -31,8 +31,8 @@ Incluye **API REST en Laravel** y **aplicación móvil/web en React Native (Expo
 ## Arquitectura del proyecto
 
 patitas/
-├─ backend/ # API Laravel
 
+├─ backend/ # API Laravel
 │ ├─ app/
 
 │ ├─ routes/api.php
