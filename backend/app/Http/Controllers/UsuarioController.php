@@ -66,6 +66,7 @@ class UsuarioController extends Controller {
         $nombre = $request->nombre;
         $apellido = $request->apellido;
         $correo = $request->correo;
+        $telefono = $request->telefono;
         $pass = $request->pass;
         $genero = $request->genero;
         $id_rol = $request->id_rol;
@@ -88,6 +89,13 @@ class UsuarioController extends Controller {
             return response("Correo ya registrado", 400)->header('Content-Type', 'application/json');
         }
         
+        if (trim($telefono) == "") {
+            return response("Campo Teléfono Vacío", 400)->header('Content-Type', 'application/json');
+        } else {
+            if (!preg_match("/[0-9]{8}/", $telefono)) {
+                return response("Campo Teléfono solo debe contener 8 números", 400)->header('Content-Type', 'application/json');
+            }
+        }
 
         if (trim($pass) == "") {
             return response("Campo Contraseña Vacío", 400)->header('Content-Type', 'application/json');

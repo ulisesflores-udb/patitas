@@ -70,15 +70,14 @@ class PerdidaController extends Controller
             return response("Campo Foto Vacío", 400)->header('Content-Type', 'application/json');
         }
 
-        # Fecha de Publicación
-        if (trim($fecha_publi) == "") {
-            return response("Campo Fecha de Publicación Vacío", 400)->header('Content-Type', 'application/json');
-        }
-
         # Fecha de Pérdida
         if (trim($fecha_perdida) == "") {
             return response("Campo Fecha de Pérdida Vacío", 400)->header('Content-Type', 'application/json');
-        }
+        } else if (!preg_match("/\d{4}\/\d{2}\/\d{2}/", $fecha_perdida)) {
+            return response("Campo Fecha de Pérdida debe tener el formato aaaa/mm/dd", 400)->header('Content-Type', 'application/json');
+        } else if ($fecha_perdida > date('Y/m/d')) {
+            return response("Campo Fecha de Pérdida no puede ser mayor a la fecha actual", 400)->header('Content-Type', 'application/json');
+        } 
 
         # Raza
         if (trim($id_raza) == "") {

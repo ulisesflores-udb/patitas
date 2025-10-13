@@ -65,7 +65,8 @@ class RazaController extends Controller
         // Almacenar
         $raza->nombre = $nombre;
         $raza->estado = $estado;
-
+        $raza->id_especie = $id_especie;
+        $raza->timestamps = false;
         $raza->save();
 
 
