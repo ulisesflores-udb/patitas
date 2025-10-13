@@ -42,8 +42,8 @@ Route::controller(UsuarioController::class)->group(function() {
     // CRUD Perfil
     Route::get('/perfil', 'index');
     Route::post('/perfil', 'store');
-    Route::put('/perfil/{id}', 'update');
-    Route::delete('/perfil/{id}', 'destroy');
+    Route::put('/perfil/{usuario}', 'update');
+    Route::delete('/perfil/{usuario}', 'destroy');
 
     Route::post('/login', 'login');
     Route::post('/register', 'store');
@@ -51,10 +51,10 @@ Route::controller(UsuarioController::class)->group(function() {
 
     // Rutas para Usuario Administrador
     Route::get('/usuarios', 'getUsuarios');
-    Route::get('/usuarios/{id}', 'edit');
+    Route::get('/usuarios/{usuario}', 'edit');
     Route::post('/usuarios', 'store');
-    Route::put('/usuarios/{id}', 'update');
-    Route::delete('/usuarios/{id}', 'destroy');
+    Route::put('/usuarios/{usuario}', 'update');
+    Route::delete('/usuarios/{usuario}', 'destroy');
 });
 
 
