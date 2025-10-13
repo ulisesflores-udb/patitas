@@ -15,7 +15,7 @@ import MyPublicationsScreen from './src/screens/MyPublicationsScreen';
 import ChangePasswordScreen from './src/screens/ChangePasswordScreen';
 import NotificationsScreen from './src/screens/NotificationsScreen';
 import FaqScreen from './src/screens/FaqScreen';
-import agregarMascotaScreen from './src/screens/agregarMascotaScreen';
+import AgregarMascotaScreen from './src/screens/AgregarMascotaScreen';
 import AddPetLocationScreen from './src/screens/AddPetLocationScreen';
 import SearchScreen from './src/screens/SearchScreen';
 
@@ -126,7 +126,15 @@ export default function App() {
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
         <Stack.Screen name="FAQ" component={FaqScreen} />
-        <Stack.Screen name="AddPet" component={agregarMascotaScreen} />
+        <Stack.Screen name="AddPet">
+          { props => <AgregarMascotaScreen 
+            {...props}
+            usuario = {usuarioLogeado}
+            especies = {especies}
+            razas = {razas}
+            setPets={setPerdidas}
+          />}
+        </Stack.Screen>
         <Stack.Screen name="AddPetLocation" component={AddPetLocationScreen} />
         <Stack.Screen name="PublicationDetail" component={PublicationDetailScreen} />
         <Stack.Screen name="Responder">

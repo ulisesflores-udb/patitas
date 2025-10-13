@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 
-export default function AgregarMascotaScreen({ navigation }) {
+export default function AgregarMascotaScreen({ navigation, usuario, especies, razas, setPets }) {
   const [contactName, setContactName] = useState('');
   const [species, setSpecies] = useState('');
   const [breed, setBreed] = useState('');
@@ -15,28 +15,16 @@ export default function AgregarMascotaScreen({ navigation }) {
   const canContinue = contactName.trim() && species && description.trim();
 
   const BreedOptions = () => {
-    if (species === 'perro') {
-      return (
-        <>
-          <Picker.Item label="Golden Retriever" value="golden" />
-          <Picker.Item label="Labrador" value="labrador" />
-          <Picker.Item label="Pug" value="pug" />
-        </>
-      );
+    if (!species) return null;
+    const filteredBreeds = razas.filter((r) => String(r.id_especie) === String(species));
+    if (filteredBreeds.length > 0) {
+      return filteredBreeds.map((r) => (
+        <Picker.Item key={r.id} label={r.nombre} value={r.id} />
+      ));
     }
-    if (species === 'gato') {
-      return (
-        <>
-          <Picker.Item label="Persa" value="persa" />
-          <Picker.Item label="Siamés" value="siames" />
-          <Picker.Item label="Mestizo" value="mestizo" />
-        </>
-      );
-    }
-    return null;
+    return <Picker.Item label="Sin razas disponibles" value="" />;
   };
 
-  // ✅ función para ir a la pantalla de ubicación (con el NOMBRE DE RUTA EXACTO)
   const goNext = () => {
   navigation.navigate('AddPetLocation', {
     contactName, species, breed, description, lostDate
@@ -96,8 +84,9 @@ export default function AgregarMascotaScreen({ navigation }) {
                   dropdownIconColor={COLORS.dark}
                 >
                   <Picker.Item label="Seleccione" value="" />
-                  <Picker.Item label="Perro" value="perro" />
-                  <Picker.Item label="Gato" value="gato" />
+                  {especies && especies.map((esp) => (
+                    <Picker.Item key={esp.id} label={esp.nombre} value={esp.id} />
+                  ))}
                 </Picker>
                 <Ionicons name="chevron-down" size={16} color={COLORS.dark} style={styles.selectIcon} />
               </View>
