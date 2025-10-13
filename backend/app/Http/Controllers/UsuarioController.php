@@ -60,33 +60,72 @@ class UsuarioController extends Controller {
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request) {
-        $request->validate([
-            'nombre' => 'required|string|max:100',
-            'apellido' => 'required|string|max:100',
-            'correo' => 'required|email|max:100|unique:usuarios,correo',
-            'genero' => 'required|string|max:20',
-            'id_rol' => 'required|integer',
-            'id_distrito' => 'required|integer',
-            'estado' => 'required|boolean',
-        ]);
-        $nombre = $request->input('nombre');
-        $apellido = $request->input('apellido');
-        $correo = $request->input('correo');
-        $genero = $request->input('genero');
-        $id_rol = $request->input('id_rol');
-        $id_distrito = $request->input('id_distrito');
-        $estado = $request->input('estado');
+    public function store(Request $request) {
         $usuario = new Usuario();
+
+        $nombre = $request->nombre;
+        $apellido = $request->apellido;
+        $correo = $request->correo;
+        $pass = $request->pass;
+        $genero = $request->genero;
+        $id_rol = $request->id_rol;
+        $id_distrito = $request->id_distrito;
+        $estado = $request->estado;
+
+        if (trim($nombre) == "") {
+            return response("Campo Nombre Vacío", 400)->header('Content-Type', 'application/json');
+        } else {
+            if (!preg_match("/[a-zA-Z ]+/", $nombre)) {
+                return response("Campo Nombre solo debe contener letras", 400)->header('Content-Type', 'application/json');
+            }
+        }
+
+        if (trim($correo) == "") {
+            return response("Campo Correo Vacío", 400)->header('Content-Type', 'application/json');
+        } else if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            return response("Correo no es válido", 400)->header('Content-Type', 'application/json');
+        } else if (Usuario::where('correo', $correo)->exists()) {
+            return response("Correo ya registrado", 400)->header('Content-Type', 'application/json');
+        }
+        
+
+        if (trim($pass) == "") {
+            return response("Campo Contraseña Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        if (trim($genero) == "") {
+            return response("Campo Género Vacío", 400)->header('Content-Type', 'application/json');
+        } else {
+            if (!preg_match("/[a-zA-Z ]+/", $genero)) {
+                return response("Campo Género solo debe contener letras", 400)->header('Content-Type', 'application/json');
+            }
+        }
+
+        if (trim($id_rol) == "") {
+            return response("Campo Rol Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        if (trim($id_distrito) == "") {
+            return response("Campo Distrito Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        if (trim($estado) == "") {
+            return response("Campo Estado Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+
+
+
         $usuario->nombre = $nombre;
         $usuario->apellido = $apellido;
         $usuario->correo = $correo;
+        $usuario->pass = $pass;
         $usuario->genero = $genero;
         $usuario->id_rol = $id_rol;
         $usuario->id_distrito = $id_distrito;
         $usuario->estado = $estado;
         $usuario->save();
-        return response()->json(['message' => 'Usuario creado correctamente.']);
+        return response($usuario, 200)->header('Content-Type', 'application/json');
     }
 
     /**
@@ -116,40 +155,68 @@ class UsuarioController extends Controller {
         return response()->json($usuario);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {
-        $id = $id;
-        $request->validate([
-            'nombre' => 'required|string|max:100',
-            'apellido' => 'required|string|max:100',
-            'correo' => 'required|email|max:100',
-            'genero' => 'required|string|max:20',
-            'id_rol' => 'required|integer',
-            'id_distrito' => 'required|integer',
-            'estado' => 'required|boolean',
-        ]);
-        $nombre = $request->input('nombre');
-        $apellido = $request->input('apellido');
-        $correo = $request->input('correo');
-        $genero = $request->input('genero');
-        $id_rol = $request->input('id_rol');
-        $id_distrito = $request->input('id_distrito');
-        $estado = $request->input('estado');
-        $usuario = Usuario::find($id);
-        if ($usuario) {
-            $usuario->nombre = $nombre;
-            $usuario->apellido = $apellido;
-            $usuario->correo = $correo;
-            $usuario->genero = $genero;
-            $usuario->id_rol = $id_rol;
-            $usuario->id_distrito = $id_distrito;
-            $usuario->estado = $estado;
-            $usuario->save();
-            return response()->json(['message' => 'Usuario actualizado correctamente.']);
-        } else
-            return response()->json(['message' => 'Usuario no encontrado.'], 404);
+    public function update(Request $request, Usuario $usuario) {
+        $id = $usuario->id;
+        $nombre = $request->nombre;
+        $apellido = $request->apellido;
+        $correo = $request->correo;
+        $genero = $request->genero;
+        $id_rol = $request->id_rol;
+        $id_distrito = $request->id_distrito;
+        $estado = $request->estado;
+
+        if (!Usuario::find($id)) {
+            return response("Usuario no Encontrado", 404)->header('Content-Type', 'application/json');
+        }
+
+
+        if (trim($nombre) == "") {
+            return response("Campo Nombre Vacío", 400)->header('Content-Type', 'application/json');
+        } else {
+            if (!preg_match("/[a-zA-Z ]+/", $nombre)) {
+                return response("Campo Nombre solo debe contener letras", 400)->header('Content-Type', 'application/json');
+            }
+        }
+
+        if (trim($correo) == "") {
+            return response("Campo Correo Vacío", 400)->header('Content-Type', 'application/json');
+        } else {
+            if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+                return response("Correo no es válido", 400)->header('Content-Type', 'application/json');
+            }
+        }
+
+        if (trim($genero) == "") {
+            return response("Campo Género Vacío", 400)->header('Content-Type', 'application/json');
+        } else {
+            if (!preg_match("/[a-zA-Z ]+/", $genero)) {
+                return response("Campo Género solo debe contener letras", 400)->header('Content-Type', 'application/json');
+            }
+        }
+
+        if (trim($id_rol) == "") {
+            return response("Campo Rol Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        if (trim($id_distrito) == "") {
+            return response("Campo Distrito Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        if (trim($estado) == "") {
+            return response("Campo Estado Vacío", 400)->header('Content-Type', 'application/json');
+        }
+
+        $usuario->nombre = $nombre;
+        $usuario->apellido = $apellido;
+        $usuario->correo = $correo;
+        $usuario->genero = $genero;
+        $usuario->id_rol = $id_rol;
+        $usuario->id_distrito = $id_distrito;
+        $usuario->estado = $estado;
+        $usuario->timestamps = false;
+        $usuario->update();
+
+        return response($usuario, 200)->header('Content-Type', 'application/json');
     }
 
     /**
