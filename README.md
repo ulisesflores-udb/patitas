@@ -32,15 +32,25 @@ Incluye **API REST en Laravel** y **aplicación móvil/web en React Native (Expo
 
 patitas/
 ├─ backend/ # API Laravel
+
 │ ├─ app/
+
 │ ├─ routes/api.php
+
 │ ├─ database/
+
 │ └─ .env.example
+
 └─ frontend/ # React Native + Expo
+
 ├─ App.js
+
 └─ src/
+
 ├─ screens/
+
 ├─ services/
+
 └─ config/
 
 ## Instalación rápida (TL;DR)
