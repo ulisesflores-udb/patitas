@@ -45,6 +45,9 @@ Route::controller(UsuarioController::class)->group(function() {
     Route::put('/perfil/{id}', 'update');
     Route::delete('/perfil/{id}', 'destroy');
 
+    Route::post('/login', 'login');
+    Route::post('/register', 'store');
+    
 
     // Rutas para Usuario Administrador
     Route::get('/usuarios', 'getUsuarios');

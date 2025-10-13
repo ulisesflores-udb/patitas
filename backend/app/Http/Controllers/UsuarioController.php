@@ -7,6 +7,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller {
+    public function login(Request $request) {
+        // $request->validate([
+        //     'correo' => 'required|email|max:100',
+        //     'pass' => 'required'
+        // ]);
+        $correo = $request->input('correo');
+        $pass = $request->input('pass');
+        $usuario = Usuario::where('correo', $correo)
+            ->where('pass', $pass)
+            ->join('roles as r', 'usuarios.id_rol', '=', 'r.id')
+            ->join('distritos as dis', 'usuarios.id_distrito', '=', 'dis.id')
+            ->join('municipios as mun', 'dis.id_municipio', '=', 'mun.id')
+            ->join('departamentos as depto', 'mun.id_departamento', '=', 'depto.id')
+            ->select(
+                'usuarios.*',
+                'r.nombre as rol',
+                'depto.id as depto_id',
+                'mun.id as muni_id'
+            )
+            ->first();
+
+        if ($usuario) {
+            return response()->json($usuario);
+        } else {
+            return response()->json(['message' => 'Usuario no encontrado.'], 404);
+        }
+    }
+
     public function getUsuarios() {
         $usuarios = Usuario::join('roles as r', 'usuarios.id_rol', '=', 'r.id')
         ->join('distritos as dis', 'usuarios.id_distrito', '=', 'dis.id')
