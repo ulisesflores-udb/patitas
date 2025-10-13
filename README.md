@@ -73,8 +73,5 @@ npm install
 npx expo start      # elige web/android/ios
 # Web
 npm run web
-# o
-npx expo start --web
-
 
 
