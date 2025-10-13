@@ -43,14 +43,14 @@ useEffect(() => {
 
   useEffect(() => {
     if (municipio) {
+      console.log(municipio)
       const fetchDistritos = async () => {
         setIsLoadingDistritos(true);
-        setDistritos([]); // Limpia la lista anterior
-        setDistrito(null); // Resetea la selección
+        setDistritos([]);
+        setDistrito(null); 
         try {
-          // Asume que tu API puede filtrar distritos por municipio
-          // ¡ASEGÚRATE DE QUE ESTE ENDPOINT EXISTA EN TU BACKEND!
-          const response = await axios.get(`http://192.168.1.188:8000/api/distrito?id_municipio=${municipio}`);
+          
+          const response = await axios.get(`http://192.168.1.188:8000/api/distrito/${municipio}`);
           setDistritos(response.data);
         } catch (error) {
           console.error("Error al obtener los distritos:", error);
