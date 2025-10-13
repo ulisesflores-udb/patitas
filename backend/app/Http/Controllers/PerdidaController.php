@@ -38,7 +38,7 @@ class PerdidaController extends Controller
         $nombre_mascota = $request->nombre_mascota;
         $descripcion = $request->descripcion;
         $foto = $request->foto;
-        $fecha_publi = $request->fecha_publi;
+        $fecha_public = $request->fecha_public;
         $fecha_perdida = $request->fecha_perdida;
         $id_raza = $request->id_raza;
         $latitud = $request->latitud;
@@ -117,7 +117,7 @@ class PerdidaController extends Controller
         $perdida->nombre_mascota = $nombre_mascota;
         $perdida->descripcion = $descripcion;
         $perdida->foto = $foto;
-        $perdida->fecha_publi = $fecha_publi;
+        $perdida->fecha_public = $fecha_public;
         $perdida->fecha_perdida = $fecha_perdida;
         $perdida->id_raza = $id_raza;
         $perdida->latitud = $latitud;
